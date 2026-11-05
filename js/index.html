@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catatan Uang</title>
+<meta name="theme-color" content="#EECAA6">
+<script>try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<main class="app">
+
+<section id="auth-screen" class="paper auth" hidden>
+  <h1 class="brand">Catatan Uang</h1>
+  <p class="muted">Catat pemasukan dan pengeluaranmu, satu halaman tiap minggu.</p>
+  <div class="seg" role="tablist" aria-label="Masuk atau daftar">
+    <button type="button" role="tab" id="tab-login" aria-selected="true">Masuk</button>
+    <button type="button" role="tab" id="tab-register" aria-selected="false">Daftar</button>
+  </div>
+  <form id="auth-form" novalidate>
+    <label class="fld"><span>Email</span><input id="auth-email" class="inp" type="email" autocomplete="email" required></label>
+    <label class="fld"><span>Kata sandi</span><input id="auth-pass" class="inp" type="password" autocomplete="current-password" minlength="6" required></label>
+    <p id="auth-error" class="form-error" role="alert"></p>
+    <button id="auth-submit" class="btn primary block" type="submit">Masuk</button>
+  </form>
+</section>
+
+<section id="app-screen" hidden>
+  <header class="top">
+    <h1 class="brand sm">Catatan Uang</h1>
+    <div class="top-actions">
+      <button id="btn-profile" class="icon-btn" type="button" aria-label="Profil" title="Profil" data-icon="user"></button>
+      <button id="btn-logout" class="icon-btn" type="button" aria-label="Keluar" title="Keluar" data-icon="logout"></button>
+    </div>
+  </header>
+
+  <div class="paper">
+    <nav class="weeknav" aria-label="Navigasi minggu">
+      <button id="prev-week" class="icon-btn" type="button" aria-label="Minggu sebelumnya" title="Minggu sebelumnya" data-icon="left"></button>
+      <strong id="week-label" aria-live="polite"></strong>
+      <button id="next-week" class="icon-btn" type="button" aria-label="Minggu berikutnya" title="Minggu berikutnya" data-icon="right"></button>
+    </nav>
+    <div id="strip" class="strip" role="group" aria-label="Hari dalam minggu"></div>
+    <button id="all-days" class="chip" type="button" hidden>Semua hari</button>
+    <div id="summary" class="summary" aria-live="polite"></div>
+    <div id="detail" class="detail"></div>
+  </div>
+
+  <div class="paper chart-card">
+    <nav class="weeknav" aria-label="Navigasi bulan">
+      <button id="prev-month" class="icon-btn" type="button" aria-label="Bulan sebelumnya" title="Bulan sebelumnya" data-icon="left"></button>
+      <strong id="month-label" aria-live="polite"></strong>
+      <button id="next-month" class="icon-btn" type="button" aria-label="Bulan berikutnya" title="Bulan berikutnya" data-icon="right"></button>
+    </nav>
+    <div id="chart-state"></div>
+    <div id="chart-wrap" class="chart-wrap" hidden><canvas id="month-chart" role="img" aria-label="Grafik pemasukan dan pengeluaran per minggu"></canvas></div>
+    <div id="pie-state"></div>
+    <div id="pie-wrap" class="pie-wrap" hidden><canvas id="pie-chart" role="img" aria-label="Grafik komposisi pengeluaran per kategori"></canvas></div>
+  </div>
+
+  <button id="fab" class="fab" type="button">+add new report</button>
+</section>
+
+<div id="loading" class="loading">Memuat…</div>
+</main>
+
+<div id="overlay" class="overlay" hidden>
+  <div id="sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <header class="sheet-head">
+      <h2 id="sheet-title"></h2>
+      <button id="sheet-close" class="icon-btn" type="button" aria-label="Tutup" title="Tutup" data-icon="close"></button>
+    </header>
+    <div id="sheet-body"></div>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

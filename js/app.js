@@ -1,6 +1,6 @@
 import { onAuth, login, register, logout, authError } from "./auth.js";
 import { listRange, addTx, updateTx, deleteTx } from "./db.js";
-import { renderMonthChart, destroyChart } from "./chart.js";
+import { renderMonthChart, renderPieChart, destroyChart } from "./chart.js";
 import { h, clear, icon, hydrateIcons, rupiah, formatAmount, parseAmount, startOfWeek, addDays, ymd, fromYmd,
   shortDate, DAYS, MONTHS, CATEGORIES, getTheme, setTheme, toast } from "./ui.js";
 
@@ -120,15 +120,44 @@ function renderMonth() {
   $("month-label").textContent = `${MONTHS[S.month.getMonth()]} ${S.month.getFullYear()}`;
   const st = clear($("chart-state")), wrap = $("chart-wrap");
   wrap.hidden = true;
-  if (S.mLoad) return st.append(h("p", { class: "note" }, "Memuat grafik…"));
-  if (S.mErr) return st.append(errBox(S.mErr, loadMonth));
-  if (!S.mtx.length) return st.append(h("p", { class: "empty" }, "Belum ada catatan bulan ini"));
+  const pst = clear($("pie-state")), pwrap = $("pie-wrap");
+  pwrap.hidden = true;
+  if (S.mLoad) {
+    st.append(h("p", { class: "note" }, "Memuat grafik…"));
+    return;
+  }
+  if (S.mErr) {
+    st.append(errBox(S.mErr, loadMonth));
+    return;
+  }
+  if (!S.mtx.length) {
+    st.append(h("p", { class: "empty" }, "Belum ada catatan bulan ini"));
+    return;
+  }
   const y = S.month.getFullYear(), m = S.month.getMonth(), first = startOfWeek(S.month), WK = 7 * 864e5;
   const n = Math.round((startOfWeek(new Date(y, m + 1, 0)) - first) / WK) + 1;
   const inc = Array(n).fill(0), out = Array(n).fill(0);
   for (const t of S.mtx) { const i = Math.round((startOfWeek(t.date) - first) / WK); (t.type === "income" ? inc : out)[i] += t.amount; }
   wrap.hidden = false;
   renderMonthChart($("month-chart"), inc.map((_, i) => `Mgg ${i + 1}`), inc, out);
+
+  /* Pie chart: komposisi pengeluaran per kategori */
+  const byCat = new Map();
+  for (const t of S.mtx) {
+    if (t.type !== "expense") continue;
+    const key = t.category || "Lainnya";
+    byCat.set(key, (byCat.get(key) || 0) + t.amount);
+  }
+  const totalExp = [...byCat.values()].reduce((a, v) => a + v, 0);
+  if (!totalExp) {
+    pst.append(h("p", { class: "empty" }, "Belum ada pengeluaran bulan ini"));
+    return;
+  }
+  const entries = [...byCat.entries()].sort((a, b) => b[1] - a[1]);
+  const labels = entries.map((e) => e[0]);
+  const values = entries.map((e) => e[1]);
+  pwrap.hidden = false;
+  renderPieChart($("pie-chart"), labels, values);
 }
 $("prev-month").onclick = () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth() - 1, 1); loadMonth(); };
 $("next-month").onclick = () => { S.month = new Date(S.month.getFullYear(), S.month.getMonth() + 1, 1); loadMonth(); };
