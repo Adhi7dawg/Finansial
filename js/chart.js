@@ -4,7 +4,7 @@ let chart = null;
 let pieChart = null;
 const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
-const PIE_COLORS = ["#A87A52", "#C99A6B", "#8A6B4F", "#D9B48A", "#7C5A3C", "#B08A64", "#9E7A57", "#C2A27E"];
+const PIE_COLORS = ["#0D9488", "#0284C7", "#38BDF8", "#2DD4BF", "#64748B", "#94A3B8", "#475569", "#1E293B"];
 
 export function renderMonthChart(canvas, labels, income, expense) {
   if (chart) chart.destroy();
