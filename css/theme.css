@@ -1,0 +1,35 @@
+:root {
+  --primary: #263D91;
+  --on-primary: #F4F2EA;
+  --bg: #F4F2EA;
+  --paper: #FFFFFF;
+  --ink: #17191F;
+  --muted: #626775;
+  --line: #D9DCE5;
+  --margin: #E6B94F;
+  --income: #263D91;
+  --expense: #4166CE;
+  --chart-2: #4166CE;
+  --chart-edge: #17191F;
+  --focus: #E6B94F;
+}
+
+[data-theme="dark"] {
+  --bg: #17191F;
+  --paper: #242832;
+  --ink: #F4F2EA;
+  --muted: #B5BAC7;
+  --line: #3B404C;
+  --margin: #E6B94F;
+  --primary: #4166CE;
+  --on-primary: #F4F2EA;
+  --income: #E6B94F;
+  --expense: #8EA5F0;
+  --chart-2: #E6B94F;
+  --chart-edge: #F4F2EA;
+  --focus: #E6B94F;
+}
+
+.icon-btn:hover { background: color-mix(in srgb, var(--primary) 20%, transparent); }
+.seg { background: color-mix(in srgb, var(--primary) 15%, var(--paper)); }
+.overlay { background: rgba(23, 25, 31, .6); }
